@@ -29,6 +29,7 @@ class Downloader:
         self.labels = labels
         self.n_jobs = n_jobs
         self.download_type = download_type
+        self.copy_and_replicate = copy_and_replicate
 
         # Create the path
         os.makedirs(self.root_path, exist_ok=True)
