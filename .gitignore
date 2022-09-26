@@ -5,6 +5,7 @@
 
 test/
 audioset/
+.*DS_Store
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

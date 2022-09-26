@@ -42,7 +42,7 @@ The main class is `audioset_download.Downloader`. It is initialized using the fo
 
 The methods of the class are:
 * `download(format='vorbis', quality=5)`: downloads the dataset. 
-  * The format can be one of the following:
+* The format can be one of the following (supported by [yt-dlp](https://github.com/yt-dlp/yt-dlp#post-processing-options) `--audio-format` parameter):
     * `vorbis`: downloads the dataset in Ogg Vorbis format. This is the default.
     * `wav`: downloads the dataset in WAV format.
     * `mp3`: downloads the dataset in MP3 format.
@@ -50,7 +50,6 @@ The methods of the class are:
     * `flac`: downloads the dataset in FLAC format.
     * `opus`: downloads the dataset in Opus format.
     * `webm`: downloads the dataset in WebM format.
-    * `all`: downloads the dataset in all formats.
   * The quality can be an integer between 0 and 10. Default is 5.
 * `read_class_mapping()`: reads the class mapping file. It is not used externally.
 * `download_file(...)`: downloads a single file. It is not used externally.
