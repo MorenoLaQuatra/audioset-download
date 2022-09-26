@@ -77,7 +77,7 @@ class Downloader:
             self.real_labels = [self.display_to_machine_mapping[label] for label in self.labels]
             metadata = metadata[metadata['positive_labels'].apply(lambda x: any([label in x for label in self.real_labels]))]
             # remove " in the labels
-            metadata['positive_labels'] = metadata['positive_labels'].apply(lambda x: x.replace('"', ''))
+        metadata['positive_labels'] = metadata['positive_labels'].apply(lambda x: x.replace('"', ''))
         metadata = metadata.reset_index(drop=True)
 
         print(f'Downloading {len(metadata)} files...')
