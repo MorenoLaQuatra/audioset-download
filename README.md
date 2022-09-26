@@ -36,7 +36,7 @@ The main class is `audioset_download.Downloader`. It is initialized using the fo
 * `n_jobs`: the number of parallel downloads. Default is 1.
 * `download_type`: the type of download. It can be one of the following:
   * `balanced_train`: balanced train set.
-  * `unbalanced_train`: unbalanced train set. This is the default.
+  * `unbalanced_train`: unbalanced train set. This is the default
   * `eval`: evaluation set.
 * `copy_and_replicate`: if `True` if a file is associated to multiple labels, it will be copied and replicated for each label. If `False`, it will be associated to the first label in the list. Default is `True`.
 
@@ -50,6 +50,7 @@ The methods of the class are:
     * `flac`: downloads the dataset in FLAC format.
     * `opus`: downloads the dataset in Opus format.
     * `webm`: downloads the dataset in WebM format.
+    * ... and many more.
   * The quality can be an integer between 0 and 10. Default is 5.
 * `read_class_mapping()`: reads the class mapping file. It is not used externally.
 * `download_file(...)`: downloads a single file. It is not used externally.
