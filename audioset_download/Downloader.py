@@ -123,5 +123,5 @@ class Downloader:
             # copy the file in the other folders
             for label in positive_labels.split(',')[1:]:
                 display_label = self.machine_to_display_mapping[label]
-                os.system(f'cp "{os.path.join(self.root_path, display_label, ytid)}_{start_seconds}-{end_seconds}.wav" "{os.path.join(self.root_path, display_label, ytid)}_{start_seconds}-{end_seconds}.wav"')
+                os.system(f'cp "{os.path.join(self.root_path, first_display_label, ytid)}_{start_seconds}-{end_seconds}.wav" "{os.path.join(self.root_path, display_label, ytid)}_{start_seconds}-{end_seconds}.wav"')
         return
