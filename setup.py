@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='audioset-download',
-    version='1.0',
+    version='1.1',
     description='This package aims at simplifying the download of the AudioSet dataset.',
     py_modules=["Downloader"],
     packages=find_packages(include=['audioset_download', 'audioset_download.*']),
