@@ -74,6 +74,32 @@ class Downloader:
         except (subprocess.CalledProcessError, KeyError, ValueError, json.JSONDecodeError):
             return None
 
+    def _build_ytdlp_command(self, ytid: str, file_path: str, start_seconds: float, end_seconds: float):
+        """
+        Build the yt-dlp command with cookie management.
+        :param ytid: YouTube ID
+        :param file_path: output file path
+        :param start_seconds: start time in seconds
+        :param end_seconds: end time in seconds
+        :return: complete yt-dlp command string
+        """
+        base_command = (f'yt-dlp -x --audio-format {self.format} --audio-quality {self.quality} '
+                       f'--output "{file_path}" --postprocessor-args "-ss {start_seconds} -to {end_seconds}" '
+                       f'https://www.youtube.com/watch?v={ytid}')
+        
+        # Add cookie management
+        if self.cookie_file and self.cookies_from_browser:
+            print(f"[WARNING] Both cookie_file and cookies_from_browser are set. Using cookie_file: {self.cookie_file}")
+            base_command += f' --cookies "{self.cookie_file}"'
+        elif self.cookies_from_browser:
+            print("[INFO] Extracting cookies from browser...")
+            base_command += ' --cookies-from-browser chrome'
+        elif self.cookie_file:
+            print(f"[INFO] Using cookie file: {self.cookie_file}")
+            base_command += f' --cookies "{self.cookie_file}"'
+            
+        return base_command
+
     def download(
         self,
         format: str = 'vorbis',
@@ -160,7 +186,9 @@ class Downloader:
             
         file_path = os.path.join(self.root_path, first_display_label, f"{ytid}_{start_seconds}-{end_seconds}.{ext}")
         
-        os.system(f'yt-dlp -x --audio-format {self.format} --audio-quality {self.quality} --output "{file_path}" --postprocessor-args "-ss {start_seconds} -to {end_seconds}" https://www.youtube.com/watch?v={ytid}')
+        # Use centralized download command builder
+        command = self._build_ytdlp_command(ytid, file_path, start_seconds, end_seconds)
+        os.system(command)
         
         # Check if file was downloaded and has valid duration
         if os.path.exists(file_path):
@@ -304,20 +332,9 @@ class Downloader:
         if os.path.exists(file_path):
             return
         
-        # Download using yt-dlp
-        to_be_executed = f'yt-dlp -x --audio-format {self.format} --audio-quality {self.quality} --output "{file_path}" --postprocessor-args "-ss {start_seconds} -to {end_seconds}" https://www.youtube.com/watch?v={ytid}'
-        if self.cookie_file and self.cookies_from_browser:
-            print(f"[WARNING] Both cookie_file and cookies_from_browser are set. Using cookie_file: {self.cookie_file}")
-            to_be_executed += f' --cookies "{self.cookie_file}"'
-        elif self.cookies_from_browser:
-            print("[INFO] Extracting cookies from browser...")
-            # --cookies-from-browser chrome 
-            to_be_executed += ' --cookies-from-browser chrome'
-        elif self.cookie_file:
-            print(f"[INFO] Using cookie file: {self.cookie_file}")
-            to_be_executed += f' --cookies "{self.cookie_file}"'
-            
-        os.system(to_be_executed)
+        # Use centralized download command builder
+        command = self._build_ytdlp_command(ytid, file_path, start_seconds, end_seconds)
+        os.system(command)
         
         # Check if file was downloaded and has valid duration
         if os.path.exists(file_path):
