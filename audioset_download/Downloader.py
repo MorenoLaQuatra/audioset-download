@@ -16,6 +16,8 @@ class Downloader:
                     n_jobs: int = 1,
                     download_type: str = 'unbalanced_train',
                     copy_and_replicate: bool = True,
+                    cookie_file: str = None, # Path to a cookie file for yt-dlp, if needed
+                    cookies_from_browser: bool = False, # If True, cookies will be extracted from the browser
                     ):
         """
         This method initializes the class.
@@ -32,6 +34,8 @@ class Downloader:
         self.n_jobs = n_jobs
         self.download_type = download_type
         self.copy_and_replicate = copy_and_replicate
+        self.cookie_file = cookie_file
+        self.cookies_from_browser = cookies_from_browser
 
         # Create the path
         os.makedirs(self.root_path, exist_ok=True)
@@ -301,7 +305,19 @@ class Downloader:
             return
         
         # Download using yt-dlp
-        os.system(f'yt-dlp -x --audio-format {self.format} --audio-quality {self.quality} --output "{file_path}" --postprocessor-args "-ss {start_seconds} -to {end_seconds}" https://www.youtube.com/watch?v={ytid}')
+        to_be_executed = f'yt-dlp -x --audio-format {self.format} --audio-quality {self.quality} --output "{file_path}" --postprocessor-args "-ss {start_seconds} -to {end_seconds}" https://www.youtube.com/watch?v={ytid}'
+        if self.cookie_file and self.cookies_from_browser:
+            print(f"[WARNING] Both cookie_file and cookies_from_browser are set. Using cookie_file: {self.cookie_file}")
+            to_be_executed += f' --cookies "{self.cookie_file}"'
+        elif self.cookies_from_browser:
+            print("[INFO] Extracting cookies from browser...")
+            # --cookies-from-browser chrome 
+            to_be_executed += ' --cookies-from-browser chrome'
+        elif self.cookie_file:
+            print(f"[INFO] Using cookie file: {self.cookie_file}")
+            to_be_executed += f' --cookies "{self.cookie_file}"'
+            
+        os.system(to_be_executed)
         
         # Check if file was downloaded and has valid duration
         if os.path.exists(file_path):
